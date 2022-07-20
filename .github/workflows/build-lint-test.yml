@@ -2,6 +2,7 @@ name: Build, lint and test
 
 on:
   workflow_dispatch:
+  workflow_call:
   pull_request:
     branches:
       - main
@@ -23,8 +24,8 @@ jobs:
       - run: npm run lint
       - run: npm run build
       - run: npm run test
-        if: {{ github.repository != 'cloudscape-design/components' }}
+        if: ${{ github.repository != 'cloudscape-design/components' }}
       - run: npm run test:unit
-        if: {{ github.repository == 'cloudscape-design/components' }}
+        if: ${{ github.repository == 'cloudscape-design/components' }}
       - name: Codecov
-        uses: codecov/codecov-action@v1.5.2
+        uses: codecov/codecov-action@v3
