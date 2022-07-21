@@ -22,7 +22,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
     - name: Clone
       uses: actions/checkout@v2
       with:
@@ -42,7 +41,7 @@ runs:
     - run: cd ${{ inputs.package }}
       shell: bash
 
-    - uses: ./.github/actions/patch-local-dependencies
+    - uses: cloudscape-design/.github/.github/actions/patch-local-dependencies@chore/shared-actions
       with:
         path: ${{ github.workspace }}/${{ inputs.package }}
         type: local

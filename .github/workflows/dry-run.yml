@@ -17,8 +17,7 @@ jobs:
     name: Build jest-preset
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/build-package
+      - uses: cloudscape-design/.github/.github/actions/build-package@chore/shared-actions
         with:
           package: jest-preset
           skip_build: "true"
@@ -26,32 +25,28 @@ jobs:
     name: Build global-styles
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/build-package
+      - uses: cloudscape-design/.github/.github/actions/build-package@chore/shared-actions
         with:
           package: global-styles
   buildCollectionHooks:
     name: Build collection-hooks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/build-package
+      - uses: cloudscape-design/.github/.github/actions/build-package@chore/shared-actions
         with:
           package: collection-hooks
   buildBrowserTestTools:
     name: Build browser-test-tools
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/build-package
+      - uses: cloudscape-design/.github/.github/actions/build-package@chore/shared-actions
         with:
           package: browser-test-tools
   buildDocumenter:
     name: Build documenter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/build-package
+      - uses: cloudscape-design/.github/.github/actions/build-package@chore/shared-actions
         with:
           package: documenter
   buildTestUtils:
@@ -59,8 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: buildDocumenter
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/build-package
+      - uses: cloudscape-design/.github/.github/actions/build-package@chore/shared-actions
         with:
           package: test-utils
           download_dependencies: "true"
@@ -70,8 +64,7 @@ jobs:
     needs:
       - buildBrowserTestTools
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/build-package
+      - uses: cloudscape-design/.github/.github/actions/build-package@chore/shared-actions
         with:
           package: theming-core
           artifact_path: theming-*.tgz
@@ -88,8 +81,7 @@ jobs:
       - buildTestUtils
       - buildThemingCore
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/build-package
+      - uses: cloudscape-design/.github/.github/actions/build-package@chore/shared-actions
         with:
           package: components
           target_artifact: components-package
