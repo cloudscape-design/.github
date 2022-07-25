@@ -42,6 +42,7 @@ jobs:
       - name: Restore locally modified files
         run: git restore .
 
+      - run: npm run build
       - run: npm run test
 
       - name: Release package to private CodeArtifact
