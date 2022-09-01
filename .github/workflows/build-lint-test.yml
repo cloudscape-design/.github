@@ -2,6 +2,12 @@ name: Build, lint and test
 
 on:
   workflow_call:
+    inputs:
+      skip-codeql:
+        type: boolean
+        description: "Skip CodeQL checks"
+        required: false
+        default: false
 
 permissions:
   actions: read
@@ -28,6 +34,7 @@ jobs:
         uses: codecov/codecov-action@v3
 
   codeql:
+    if: ${{ inputs.skip-codeql == false }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -36,4 +43,4 @@ jobs:
         with:
           languages: javascript
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2    
+        uses: github/codeql-action/analyze@v2
