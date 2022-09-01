@@ -4,6 +4,11 @@ name: release
 
 on:
   workflow_call:
+    inputs:
+      publish-packages:
+        description: "Comma-separated list of sub-folders to publish"
+        type: string
+        required: false
 
 permissions:
   id-token: write
@@ -47,3 +52,5 @@ jobs:
 
       - name: Release package to private CodeArtifact
         uses: cloudscape-design/.github/.github/actions/release-package@main
+        with:
+          publish-packages: ${{ inputs.publish-packages }}

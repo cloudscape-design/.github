@@ -1,5 +1,11 @@
 name: "Publish package to internal CodeArtifact"
 description: "Publishes the current package to an internal CodeArtifact on a pre-release tag"
+inputs:
+  publish-packages:
+    # Arrays are not supported: https://github.com/community/community/discussions/11692
+    description: "Comma-separated list of sub-folders to publish"
+    required: false
+
 runs:
   using: "composite"
   steps:
@@ -13,5 +19,9 @@ runs:
       run: echo "::set-output name=version_suffix::-next-build.$(git rev-parse --short HEAD)"
       shell: bash
 
-    - run: INPUT_PATH=${{ github.workspace }} INPUT_SUFFIX=${{ steps.vars.outputs.version_suffix }} node ${{ github.action_path }}/index.mjs
+    - run: node ${{ github.action_path }}/index.mjs
       shell: bash
+      env:
+        INPUT_PATH: ${{ github.workspace }}
+        INPUT_SUFFIX: ${{ steps.vars.outputs.version_suffix }}
+        PUBLISH_PACKAGES: ${{ inputs.publish-packages }}

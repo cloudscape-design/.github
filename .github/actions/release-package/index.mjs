@@ -5,14 +5,15 @@ import { existsSync, readFileSync, writeFileSync } from 'fs';
 const inputs = {
   path: process.env.INPUT_PATH,
   suffix: process.env.INPUT_SUFFIX,
+  publishPackages: process.env.PUBLISH_PACKAGES?.split(',').map((pkg) => pkg.trim()),
 };
 
-// The main packags should publish to next, and dev forks to next-dev
+// The main branch should publish to next, and dev forks to next-dev
 const branchName = process.env.GITHUB_REF_TYPE === 'branch' ? process.env.GITHUB_REF_NAME : '';
 const publishTag = branchName.startsWith('dev-v3-') ? branchName : 'next';
 
 const subPackages = {
-  'components': [
+  components: [
     'lib/components',
     'lib/style-dictionary',
     'lib/components-themeable',
@@ -55,12 +56,10 @@ function main() {
   }
 
   const repositoryName = path.basename(basePath);
-  if (subPackages[repositoryName]) {
-    subPackages[repositoryName].forEach(subpath => {
-      releasePackage(path.join(basePath, subpath));
-    });
-  } else {
-    releasePackage(basePath);
+  const packagesToPublish = inputs.publishPackages ?? subPackages[repositoryName] ?? ['.'];
+
+  for (const pkg of packagesToPublish) {
+    releasePackage(path.join(basePath, pkg));
   }
 }
 
