@@ -12,18 +12,6 @@ const inputs = {
 const branchName = process.env.GITHUB_REF_TYPE === 'branch' ? process.env.GITHUB_REF_NAME : '';
 const publishTag = branchName.startsWith('dev-v3-') ? branchName : 'next';
 
-const subPackages = {
-  components: [
-    'lib/components',
-    'lib/style-dictionary',
-    'lib/components-themeable',
-    'lib/dev-pages',
-    'lib/components-definitions',
-  ],
-  'theming-core': ['lib/node', 'lib/browser'],
-  'test-utils': ['packages/core', 'packages/converter'],
-};
-
 function releasePackage(packagePath) {
   const packageJsonPath = path.join(packagePath, 'package.json');
 
@@ -55,8 +43,7 @@ function main() {
     process.exit(1);
   }
 
-  const repositoryName = path.basename(basePath);
-  const packagesToPublish = inputs.publishPackages ?? subPackages[repositoryName] ?? ['.'];
+  const packagesToPublish = inputs.publishPackages ?? ['.'];
 
   for (const pkg of packagesToPublish) {
     releasePackage(path.join(basePath, pkg));
