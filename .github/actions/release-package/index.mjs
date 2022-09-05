@@ -5,8 +5,13 @@ import { existsSync, readFileSync, writeFileSync } from 'fs';
 const inputs = {
   path: process.env.INPUT_PATH,
   suffix: process.env.INPUT_SUFFIX,
-  publishPackages: process.env.PUBLISH_PACKAGES?.split(',').map((pkg) => pkg.trim()),
+  publishPackages: process.env.PUBLISH_PACKAGES
+    ? process.env.PUBLISH_PACKAGES.split(',').map((pkg) => pkg.trim())
+    : null,
 };
+
+console.log('Inputs:');
+console.log(JSON.stringify(inputs, null, 2));
 
 // The main branch should publish to next, and dev forks to next-dev
 const branchName = process.env.GITHUB_REF_TYPE === 'branch' ? process.env.GITHUB_REF_NAME : '';
