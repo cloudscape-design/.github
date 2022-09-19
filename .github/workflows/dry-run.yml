@@ -98,6 +98,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14.x
+          cache: 'npm'
       - name: Download component artifacts
         uses: actions/download-artifact@v2
         with:
@@ -117,6 +118,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14.x
+          cache: 'npm'
       - name: Download component artifacts
         uses: actions/download-artifact@v2
         with:
@@ -136,6 +138,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14.x
+          cache: 'npm'
       - name: Download component artifacts
         uses: actions/download-artifact@v2
         with:
