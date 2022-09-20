@@ -31,7 +31,7 @@ function releasePackage(packagePath) {
   try {
     execSync(`npm publish --tag ${publishTag}`, { stdio: 'inherit', cwd: packagePath });
   } catch (e) {
-    console.error('Error while publishing:', e.stderr.toString());
+    console.error(`Publishing failed with ${e.status}: ${e.message}. ${e.stderr ? 'Full error: ' + e.stderr.toString() : ''}`);
   }
 }
 
