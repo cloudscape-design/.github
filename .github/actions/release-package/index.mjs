@@ -24,6 +24,7 @@ function releasePackage(packagePath) {
   const packageJson = JSON.parse(readFileSync(packageJsonPath));
   packageJson.version += inputs.suffix;
   packageJson.files.push("manifest.json")
+  console.log(packageJson)
   writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
   // Publish to CodeArtifact
