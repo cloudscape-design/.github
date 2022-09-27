@@ -58,7 +58,6 @@ jobs:
         with:
           name: "manifest.json"
           json: '{"commit":"${{ steps.vars.outputs.commit_sha }}", "repository":"$GITHUB_REPOSITORY"}'
-          dir: ${{ github.workspace }}
       - run: npm run test
 
       - name: Release package to private CodeArtifact
