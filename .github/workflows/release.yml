@@ -57,7 +57,7 @@ jobs:
         uses: jsdaniell/create-json@1.1.2
         with:
           name: "manifest.json"
-          json: '{"commit":"${{ steps.vars.outputs.commit_sha }}", "repository": $GITHUB_REPOSITORY}'
+          json: '{"commit":"${{ steps.vars.outputs.commit_sha }}", "repository": ${GITHUB_REPOSITORY}}'
       - run: npm run test
       - run: ls
       - name: Release package to private CodeArtifact
