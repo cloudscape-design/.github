@@ -48,6 +48,16 @@ jobs:
         run: git restore .
 
       - run: npm run build
+      - name: Save full commit SHA
+        id: vars
+        run: echo ::set-output name=commit_sha::$(git rev-parse HEAD)
+        shell: bash
+      - name: create-json
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "manifest.json"
+          json: '{"commit":"${{ steps.vars.outputs.commit_sha }}", "repository":"$GITHUB_REPOSITORY"}'
       - run: npm run test
 
       - name: Release package to private CodeArtifact
