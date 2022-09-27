@@ -23,6 +23,7 @@ function releasePackage(packagePath) {
   // Update version in the package.json file
   const packageJson = JSON.parse(readFileSync(packageJsonPath));
   packageJson.version += inputs.suffix;
+  packageJson.files.push("manifest.json")
   writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
   // Publish to CodeArtifact
