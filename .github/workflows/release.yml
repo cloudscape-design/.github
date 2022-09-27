@@ -61,6 +61,6 @@ jobs:
       - run: npm run test
       - run: ls
       - name: Release package to private CodeArtifact
-        uses: cloudscape-design/.github/.github/actions/release-package@main
+        uses: cloudscape-design/.github/.github/actions/release-package@dev-v3-alhalee
         with:
           publish-packages: ${{ inputs.publish-packages }}
