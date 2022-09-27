@@ -59,7 +59,7 @@ jobs:
           name: "manifest.json"
           json: '{"commit":"${{ steps.vars.outputs.commit_sha }}", "repository": $GITHUB_REPOSITORY}'
       - run: npm run test
-
+      - run: ls
       - name: Release package to private CodeArtifact
         uses: cloudscape-design/.github/.github/actions/release-package@main
         with:
