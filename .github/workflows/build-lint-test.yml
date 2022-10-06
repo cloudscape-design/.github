@@ -25,6 +25,14 @@ jobs:
           node-version: 14.x
       - run: npm i
       - run: npm run lint
+      - name: semantic commit
+        uses: amannn/action-semantic-pull-request@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            fix
+            feat
       - run: npm run build
       - run: npm run test
         if: ${{ github.repository != 'cloudscape-design/components' }}
