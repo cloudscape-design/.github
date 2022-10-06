@@ -48,8 +48,11 @@ jobs:
         run: git restore .
 
       - run: npm run build
-      - run: npm run test
 
+      - name: Save commit in manifest file
+        run: echo '{"commit":"${{ github.sha }}"}' > manifest.json
+
+      - run: npm run test
       - name: Release package to private CodeArtifact
         uses: cloudscape-design/.github/.github/actions/release-package@main
         with:
