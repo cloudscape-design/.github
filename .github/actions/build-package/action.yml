@@ -104,7 +104,9 @@ runs:
       if: ${{ inputs.package == 'components' }}
       shell: bash
       working-directory: ${{ inputs.package }}
-      run: tar -czf ../components.tgz --strip-components=1 .
+      run: |
+        tar -czf ../components.tgz --strip-components=1 .
+        tar -czf ../design-tokens.tgz --strip-components=1 ../design-tokens
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
