@@ -159,7 +159,12 @@ jobs:
       - buildGlobalStyles
       - buildThemingCore
     steps:
-      - uses: cloudscape-design/.github/.github/actions/build-package@main
+      - name: Download component artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: components-package
+      - name: Build
+        uses: cloudscape-design/.github/.github/actions/build-package@main
         with:
           package: demos
           download_dependencies: true
