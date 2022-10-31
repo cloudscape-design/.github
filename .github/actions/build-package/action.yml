@@ -106,8 +106,8 @@ runs:
       working-directory: ${{ inputs.package }}
       run: |
         tar -czf ../components-full.tgz --strip-components=1 .
-        tar -czf ../components.tgz --strip-components=1 lib/components/
-        tar -czf ../design-tokens.tgz --strip-components=1 lib/design-tokens/
+        tar -czf ../components.tgz --strip-components=3 lib/components/
+        tar -czf ../design-tokens.tgz --strip-components=3 lib/design-tokens/
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
