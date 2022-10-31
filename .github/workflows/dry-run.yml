@@ -153,6 +153,11 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - buildComponents
+      - buildBrowserTestTools
+      - buildCollectionHooks
+      - buildTestUtils
+      - buildGlobalStyles
+      - buildThemingCore
     steps:
       - uses: cloudscape-design/.github/.github/actions/build-package@main
         with:
