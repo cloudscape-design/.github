@@ -162,3 +162,4 @@ jobs:
       - uses: cloudscape-design/.github/.github/actions/build-package@main
         with:
           package: demos
+          download_dependencies: true
