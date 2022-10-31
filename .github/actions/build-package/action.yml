@@ -61,7 +61,7 @@ runs:
       run: npm test
       working-directory: ${{ inputs.package }}
     - name: Pack artifacts
-      if: ${{ inputs.package != 'components' && inputs.package != 'test-utils' && inputs.package != 'theming-core' }}
+      if: ${{ inputs.package != 'components' && inputs.package != 'test-utils' && inputs.package != 'theming-core' && inputs.package != 'demos' }}
       shell: bash
       working-directory: ${{ inputs.package }}
       run: |
