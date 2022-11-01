@@ -41,7 +41,7 @@ runs:
     - run: cd ${{ inputs.package }}
       shell: bash
 
-    - uses: cloudscape-design/.github/.github/actions/patch-local-dependencies@demos-dry-run
+    - uses: cloudscape-design/.github/.github/actions/patch-local-dependencies@main
       with:
         path: ${{ github.workspace }}/${{ inputs.package }}
         type: local
