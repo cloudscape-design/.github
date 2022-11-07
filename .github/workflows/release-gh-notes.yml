@@ -1,0 +1,40 @@
+name: release-gh-notes
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        description: "Specify the version for this release"
+        type: string
+      npm_package:
+        required: true
+        description: "npm package of the release"
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: install npm package
+        run: npm install ${{ github.event.inputs.npm_package }}@${{ github.event.inputs.version }}
+        shell: bash
+      - name: Get manifest file
+        id: manifest
+        run: echo ::set-output name=manifest::$(cat node_modules/${{ github.event.inputs.npm_package }}/manifest.json)
+        shell: bash
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ fromJson(steps.manifest.outputs.manifest).commit }}
+          fetch-depth: 0
+      - name: Generate changelog
+        run: npx conventional-changelog-cli@3 -i CHANGELOG.md -s -p conventionalcommits
+      - name: Create Release
+        uses: cloudscape-design/.github/.github/create-release@dev-v3-alhalee
+        with:
+          commitish: ${{ fromJson(steps.manifest.outputs.manifest).commit }}
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: Release ${{ github.event.inputs.version }}
+          body_path: CHANGELOG.md
