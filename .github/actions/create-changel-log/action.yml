@@ -1,0 +1,16 @@
+name: "Generate changelog"
+inputs:
+  version:
+    description: "version"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Generate changelog
+      uses: TriPSs/conventional-changelog-action@v3
+      with:
+        skip-commit: true
+        fallback-version: ${{ inputs.version }}
+        version-path: false
+        config-file-path: ${{ github.action_path }}/conventional-changelog.js

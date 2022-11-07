@@ -1,0 +1,59 @@
+name: release-gh-notes
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        description: "Specify the version for this release"
+        type: string
+      npm_package:
+        required: true
+        description: "npm package of the release"
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: install with retry # Retry 5 times with 1 minute delay to guarantee that the version is released to npm
+        run: |
+          max_retry=5
+          counter=0
+          until npm install ${{ github.event.inputs.npm_package }}@${{ github.event.inputs.version }}
+          do
+            sleep 60
+            [[ counter -eq $max_retry ]] && echo "Failed to install specified version" && exit 1
+            echo "Trying again. Attempt #$counter"
+            ((counter++))
+          done
+        shell: bash
+      - name: Get manifest file
+        id: manifest
+        run: echo ::set-output name=manifest::$(cat node_modules/${{ github.event.inputs.npm_package }}/manifest.json)
+        shell: bash
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ fromJson(steps.manifest.outputs.manifest).commit }}
+          fetch-depth: 0
+      - name: Get current tag
+        id: tag
+        run: echo ::set-output name=current_tag::$(git describe --tags `git rev-list --tags --max-count=1`)
+        shell: bash
+      - name: Generate changelog
+        uses: cloudscape-design/.github/.github/actions/create-change-log@dev-v3-alhalee
+        with:
+          version: ${{ github.event.inputs.version }}
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commitish: ${{ fromJson(steps.manifest.outputs.manifest).commit }}
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: Release ${{ github.event.inputs.version }}
+          draft: false
+          prerelease: false
+          body_path: CHANGELOG.md
