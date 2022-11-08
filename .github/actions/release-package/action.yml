@@ -25,3 +25,4 @@ runs:
         INPUT_PATH: ${{ github.workspace }}
         INPUT_SUFFIX: ${{ steps.vars.outputs.version_suffix }}
         PUBLISH_PACKAGES: ${{ inputs.publish-packages }}
+        COMMIT_SHA: ${{ github.sha }}

@@ -1,24 +1,26 @@
-import path from 'path';
-import { execSync } from 'child_process';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import path from "path";
+import { execSync } from "child_process";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 
 const inputs = {
   path: process.env.INPUT_PATH,
   suffix: process.env.INPUT_SUFFIX,
   publishPackages: process.env.PUBLISH_PACKAGES
-    ? process.env.PUBLISH_PACKAGES.split(',').map((pkg) => pkg.trim())
+    ? process.env.PUBLISH_PACKAGES.split(",").map((pkg) => pkg.trim())
     : null,
+  commitSha: process.env.COMMIT_SHA,
 };
 
-console.log('Inputs:');
+console.log("Inputs:");
 console.log(JSON.stringify(inputs, null, 2));
 
 // The main branch should publish to next, and dev forks to next-dev
-const branchName = process.env.GITHUB_REF_TYPE === 'branch' ? process.env.GITHUB_REF_NAME : '';
-const publishTag = branchName.startsWith('dev-v3-') ? branchName : 'next';
+const branchName =
+  process.env.GITHUB_REF_TYPE === "branch" ? process.env.GITHUB_REF_NAME : "";
+const publishTag = branchName.startsWith("dev-v3-") ? branchName : "next";
 
 function releasePackage(packagePath) {
-  const packageJsonPath = path.join(packagePath, 'package.json');
+  const packageJsonPath = path.join(packagePath, "package.json");
 
   // Update version in the package.json file
   const packageJson = JSON.parse(readFileSync(packageJsonPath));
@@ -26,13 +28,29 @@ function releasePackage(packagePath) {
   writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
   // Publish to CodeArtifact
-  console.info(`Publishing package ${packageJson.name} version ${packageJson.version} to dist-tag ${publishTag}`);
+  console.info(
+    `Publishing package ${packageJson.name} version ${packageJson.version} to dist-tag ${publishTag}`
+  );
 
   try {
-    execSync(`npm publish --tag ${publishTag}`, { stdio: 'inherit', cwd: packagePath });
+    execSync(`npm publish --tag ${publishTag}`, {
+      stdio: "inherit",
+      cwd: packagePath,
+    });
   } catch (e) {
-    console.error(`Publishing failed with ${e.status}: ${e.message}. ${e.stderr ? 'Full error: ' + e.stderr.toString() : ''}`);
+    console.error(
+      `Publishing failed with ${e.status}: ${e.message}. ${
+        e.stderr ? "Full error: " + e.stderr.toString() : ""
+      }`
+    );
   }
+}
+
+function addManifest(data, packagePath) {
+  writeFileSync(
+    path.join(packagePath, "manifest.json"),
+    JSON.stringify(data, null, 2)
+  );
 }
 
 function main() {
@@ -44,14 +62,16 @@ function main() {
   }
 
   if (!inputs.suffix) {
-    console.error('No version suffix provided.');
+    console.error("No version suffix provided.");
     process.exit(1);
   }
 
-  const packagesToPublish = inputs.publishPackages ?? ['.'];
+  const packagesToPublish = inputs.publishPackages ?? ["."];
 
   for (const pkg of packagesToPublish) {
-    releasePackage(path.join(basePath, pkg));
+    const packagePath = path.join(basePath, pkg);
+    addManifest({ commit: inputs.commitSha }, packagePath);
+    releasePackage(packagePath);
   }
 }
 
