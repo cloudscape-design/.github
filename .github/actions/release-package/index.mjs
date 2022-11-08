@@ -8,6 +8,7 @@ const inputs = {
   publishPackages: process.env.PUBLISH_PACKAGES
     ? process.env.PUBLISH_PACKAGES.split(',').map((pkg) => pkg.trim())
     : null,
+    commitSha: process.env.COMMIT_SHA,
 };
 
 console.log('Inputs:');
@@ -33,6 +34,13 @@ function releasePackage(packagePath) {
   } catch (e) {
     console.error(`Publishing failed with ${e.status}: ${e.message}. ${e.stderr ? 'Full error: ' + e.stderr.toString() : ''}`);
   }
+}  
+
+function addManifest(data, packagePath) {
+  writeFileSync(
+    path.join(packagePath, "manifest.json"),
+    JSON.stringify(data, null, 2)
+  );
 }
 
 function main() {
@@ -51,7 +59,9 @@ function main() {
   const packagesToPublish = inputs.publishPackages ?? ['.'];
 
   for (const pkg of packagesToPublish) {
-    releasePackage(path.join(basePath, pkg));
+    const packagePath = path.join(basePath, pkg);
+    addManifest({ commit: inputs.commitSha }, packagePath);
+    releasePackage(packagePath);
   }
 }
 
