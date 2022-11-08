@@ -38,7 +38,7 @@ function releasePackage(packagePath) {
 
 function addManifest(data, packagePath) {
   writeFileSync(
-    path.join(packagePath, "manifest.json"),
+    path.join(packagePath, 'manifest.json'),
     JSON.stringify(data, null, 2)
   );
 }
