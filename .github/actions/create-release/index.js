@@ -11,16 +11,16 @@ async function run() {
 
     const releaseName = getInput('release_name');
     const commitish = getInput('commitish');
-    const bodyPath = getInput('body_path');
-    let bodyFileContent = readFileSync(bodyPath, 'utf8');
 
     const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
     packageJson.version = version;
     writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
 
-    conventionalChangelog({
-      preset: 'conventionalcommits',
-    }).pipe(process.stdout);
+    const changelog = await streamToString(
+      conventionalChangelog({
+        preset: 'conventionalcommits',
+      })
+    );
 
     const octokit = getOctokit(process.env.GITHUB_TOKEN);
 
@@ -29,7 +29,7 @@ async function run() {
       repo,
       tag_name: version,
       name: releaseName,
-      body: bodyFileContent,
+      body: changelog,
       target_commitish: commitish,
     });
 
@@ -43,6 +43,15 @@ async function run() {
   } catch (error) {
     setFailed(error.message);
   }
+}
+
+async function streamToString(stream) {
+  const chunks = [];
+  return new Promise((resolve, reject) => {
+    stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
+    stream.on('error', (err) => reject(err));
+    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+  });
 }
 
 run();

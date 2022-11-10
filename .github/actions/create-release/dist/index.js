@@ -58754,16 +58754,16 @@ async function run() {
 
     const releaseName = (0,_actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput)('release_name');
     const commitish = (0,_actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput)('commitish');
-    const bodyPath = (0,_actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput)('body_path');
-    let bodyFileContent = (0,fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(bodyPath, 'utf8');
 
     const packageJson = JSON.parse((0,fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)('package.json', 'utf8'));
     packageJson.version = version;
     (0,fs__WEBPACK_IMPORTED_MODULE_0__.writeFileSync)('package.json', JSON.stringify(packageJson, null, 2));
 
-    conventional_changelog__WEBPACK_IMPORTED_MODULE_4___default()({
-      preset: 'conventionalcommits',
-    }).pipe(process.stdout);
+    const changelog = await streamToString(
+      conventional_changelog__WEBPACK_IMPORTED_MODULE_4___default()({
+        preset: 'conventionalcommits',
+      })
+    );
 
     const octokit = (0,_actions_github__WEBPACK_IMPORTED_MODULE_3__.getOctokit)(process.env.GITHUB_TOKEN);
 
@@ -58772,7 +58772,7 @@ async function run() {
       repo,
       tag_name: version,
       name: releaseName,
-      body: bodyFileContent,
+      body: changelog,
       target_commitish: commitish,
     });
 
@@ -58786,6 +58786,15 @@ async function run() {
   } catch (error) {
     (0,_actions_core__WEBPACK_IMPORTED_MODULE_2__.setFailed)(error.message);
   }
+}
+
+async function streamToString(stream) {
+  const chunks = [];
+  return new Promise((resolve, reject) => {
+    stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
+    stream.on('error', (err) => reject(err));
+    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+  });
 }
 
 run();
