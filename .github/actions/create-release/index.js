@@ -1,4 +1,4 @@
-import core from "@actions/core";
+import { getInput, setOutput, setFailed } from "@actions/core";
 import { GitHub, context } from "@actions/github";
 const fs = require("fs");
 
@@ -6,13 +6,13 @@ async function run() {
   try {
     const github = new GitHub(process.env.GITHUB_TOKEN);
     const { owner, repo } = context.repo;
-    const tagName = core.getInput("tag_name", { required: true });
+    const tagName = getInput("tag_name", { required: true });
 
-    const releaseName = core.getInput("release_name", { required: false });
+    const releaseName = getInput("release_name", { required: false });
     const commitish =
-      core.getInput("commitish", { required: false }) || context.sha;
+      getInput("commitish", { required: false }) || context.sha;
 
-    const bodyPath = core.getInput("body_path");
+    const bodyPath = getInput("body_path");
 
     let bodyFileContent = fs.readFileSync(bodyPath, { encoding: "utf8" });
 
@@ -29,11 +29,11 @@ async function run() {
       data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl },
     } = createReleaseResponse;
 
-    core.setOutput("id", releaseId);
-    core.setOutput("html_url", htmlUrl);
-    core.setOutput("upload_url", uploadUrl);
+    setOutput("id", releaseId);
+    setOutput("html_url", htmlUrl);
+    setOutput("upload_url", uploadUrl);
   } catch (error) {
-    core.setFailed(error.message);
+    setFailed(error.message);
   }
 }
 

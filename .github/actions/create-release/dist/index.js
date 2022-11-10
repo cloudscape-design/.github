@@ -9738,13 +9738,13 @@ async function run() {
   try {
     const github = new _actions_github__WEBPACK_IMPORTED_MODULE_1__.GitHub(process.env.GITHUB_TOKEN);
     const { owner, repo } = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo;
-    const tagName = _actions_core__WEBPACK_IMPORTED_MODULE_0___default().getInput("tag_name", { required: true });
+    const tagName = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("tag_name", { required: true });
 
-    const releaseName = _actions_core__WEBPACK_IMPORTED_MODULE_0___default().getInput("release_name", { required: false });
+    const releaseName = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("release_name", { required: false });
     const commitish =
-      _actions_core__WEBPACK_IMPORTED_MODULE_0___default().getInput("commitish", { required: false }) || _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.sha;
+      (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("commitish", { required: false }) || _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.sha;
 
-    const bodyPath = _actions_core__WEBPACK_IMPORTED_MODULE_0___default().getInput("body_path");
+    const bodyPath = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("body_path");
 
     let bodyFileContent = fs.readFileSync(bodyPath, { encoding: "utf8" });
 
@@ -9761,11 +9761,11 @@ async function run() {
       data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl },
     } = createReleaseResponse;
 
-    _actions_core__WEBPACK_IMPORTED_MODULE_0___default().setOutput("id", releaseId);
-    _actions_core__WEBPACK_IMPORTED_MODULE_0___default().setOutput("html_url", htmlUrl);
-    _actions_core__WEBPACK_IMPORTED_MODULE_0___default().setOutput("upload_url", uploadUrl);
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput)("id", releaseId);
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput)("html_url", htmlUrl);
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput)("upload_url", uploadUrl);
   } catch (error) {
-    _actions_core__WEBPACK_IMPORTED_MODULE_0___default().setFailed(error.message);
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(error.message);
   }
 }
 
