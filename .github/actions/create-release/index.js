@@ -1,28 +1,38 @@
-import { getInput, setOutput, setFailed } from "@actions/core";
-const github = require('@actions/github');
-const fs = require("fs");
+import { getInput, setOutput, setFailed } from '@actions/core';
+import github from '@actions/github';
+import { writeFileSync, readFileSync } from 'fs';
+import { spawnSync } from 'child_process';
 
 async function run() {
   try {
     const { owner, repo } = github.context.repo;
-    const tagName = getInput("tag_name", { required: true });
+    const version = getInput('version');
 
-    const releaseName = getInput("release_name", { required: false });
-    const commitish =
-      getInput("commitish", { required: false });
+    const releaseName = getInput('release_name');
+    const commitish = getInput('commitish');
+    const bodyPath = getInput('body_path');
+    let bodyFileContent = readFileSync(bodyPath, 'utf8');
 
-    const bodyPath = getInput("body_path");
+    const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
+    packageJson.version = version;
+    writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
 
-    let bodyFileContent = fs.readFileSync(bodyPath, { encoding: "utf8" });
+    const generateChangeLog = spawnSync(
+      'conventional-changelog -i CHANGELOG.md -s -p conventionalcommits'
+    );
 
-    console.log(process.env)
+    if (generateChangeLog.status) {
+      throw new Error(
+        `Failed to generate changelog with non-zero exit code: ${installNpmPackage.status}`
+      );
+    }
 
-    const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
+    const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 
     const createReleaseResponse = await octokit.rest.repos.createRelease({
       owner,
       repo,
-      tag_name: tagName,
+      tag_name: version,
       name: releaseName,
       body: bodyFileContent,
       target_commitish: commitish,
@@ -32,9 +42,9 @@ async function run() {
       data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl },
     } = createReleaseResponse;
 
-    setOutput("id", releaseId);
-    setOutput("html_url", htmlUrl);
-    setOutput("upload_url", uploadUrl);
+    setOutput('id', releaseId);
+    setOutput('html_url', htmlUrl);
+    setOutput('upload_url', uploadUrl);
   } catch (error) {
     setFailed(error.message);
   }

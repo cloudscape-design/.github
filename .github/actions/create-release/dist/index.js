@@ -9725,34 +9725,54 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
+// ESM COMPAT FLAG
 __nccwpck_require__.r(__webpack_exports__);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
 
-const github = __nccwpck_require__(5438);
-const fs = __nccwpck_require__(7147);
+// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(2186);
+// EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
+var github = __nccwpck_require__(5438);
+var github_default = /*#__PURE__*/__nccwpck_require__.n(github);
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(7147);
+;// CONCATENATED MODULE: external "child_process"
+const external_child_process_namespaceObject = require("child_process");
+;// CONCATENATED MODULE: ./index.js
+
+
+
+
 
 async function run() {
   try {
-    const { owner, repo } = github.context.repo;
-    const tagName = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("tag_name", { required: true });
+    const { owner, repo } = (github_default()).context.repo;
+    const version = (0,core.getInput)('version');
 
-    const releaseName = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("release_name", { required: false });
-    const commitish =
-      (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("commitish", { required: false });
+    const releaseName = (0,core.getInput)('release_name');
+    const commitish = (0,core.getInput)('commitish');
+    const bodyPath = (0,core.getInput)('body_path');
+    let bodyFileContent = (0,external_fs_.readFileSync)(bodyPath, 'utf8');
 
-    const bodyPath = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("body_path");
+    const packageJson = JSON.parse((0,external_fs_.readFileSync)('package.json', 'utf8'));
+    packageJson.version = version;
+    (0,external_fs_.writeFileSync)('package.json', JSON.stringify(packageJson, null, 2));
 
-    let bodyFileContent = fs.readFileSync(bodyPath, { encoding: "utf8" });
+    const generateChangeLog = (0,external_child_process_namespaceObject.spawnSync)(
+      'conventional-changelog -i CHANGELOG.md -s -p conventionalcommits'
+    );
 
-    console.log(process.env)
+    if (generateChangeLog.status) {
+      throw new Error(
+        `Failed to generate changelog with non-zero exit code: ${installNpmPackage.status}`
+      );
+    }
 
-    const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
+    const octokit = github_default().getOctokit(process.env.GITHUB_TOKEN);
 
     const createReleaseResponse = await octokit.rest.repos.createRelease({
       owner,
       repo,
-      tag_name: tagName,
+      tag_name: version,
       name: releaseName,
       body: bodyFileContent,
       target_commitish: commitish,
@@ -9762,11 +9782,11 @@ async function run() {
       data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl },
     } = createReleaseResponse;
 
-    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput)("id", releaseId);
-    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput)("html_url", htmlUrl);
-    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput)("upload_url", uploadUrl);
+    (0,core.setOutput)('id', releaseId);
+    (0,core.setOutput)('html_url', htmlUrl);
+    (0,core.setOutput)('upload_url', uploadUrl);
   } catch (error) {
-    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(error.message);
+    (0,core.setFailed)(error.message);
   }
 }
 
