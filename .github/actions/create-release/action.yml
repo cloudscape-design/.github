@@ -28,5 +28,5 @@ runs:
       uses: actions/setup-node@v2
       with:
         node-version: 16.x
-    - run: GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" node ${{ github.action_path }}/dist/index.js
+    - run: node ${{ github.action_path }}/dist/index.js
       shell: bash
