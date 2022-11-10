@@ -33,3 +33,5 @@ jobs:
         run: npx conventional-changelog-cli@2 -i CHANGELOG.md -s -p conventionalcommits
       - name: Create Release
         run: gh release create ${{ github.event.inputs.version }} -F CHANGELOG.md --target 0c53a3915b62a1235e1905cb6bd0c538bce9293f
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
