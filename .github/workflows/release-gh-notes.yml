@@ -22,7 +22,7 @@ jobs:
         shell: bash
        - name: Get manifest file
          id: manifest
-         run: echo ::set-output name=manifest::$(cat node_modules/${{ github.event.inputs.npm_package }}/manifest.json)
+         run: echo ::set-output name=manifest::$(cat node_modules/${{ github.event.inputs.npm_package }}/internal/manifest.json)
          shell: bash
       - name: Checkout
         uses: actions/checkout@v3
