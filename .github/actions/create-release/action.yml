@@ -22,7 +22,11 @@ outputs:
     description: 'The URL for uploading assets to the release'
 
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
-  env: 
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  using: "composite"
+  steps:
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16.x
+    - run: GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} node ${{ github.action_path }}/dist/index.js
+      shell: bash
