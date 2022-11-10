@@ -1,22 +1,23 @@
 import { getInput, setOutput, setFailed } from "@actions/core";
-import { GitHub, context } from "@actions/github";
+const github = require('@actions/github');
 const fs = require("fs");
 
 async function run() {
   try {
-    const github = new GitHub(process.env.GITHUB_TOKEN);
-    const { owner, repo } = context.repo;
+    const { owner, repo } = github.context.repo;
     const tagName = getInput("tag_name", { required: true });
 
     const releaseName = getInput("release_name", { required: false });
     const commitish =
-      getInput("commitish", { required: false }) || context.sha;
+      getInput("commitish", { required: false });
 
     const bodyPath = getInput("body_path");
 
     let bodyFileContent = fs.readFileSync(bodyPath, { encoding: "utf8" });
 
-    const createReleaseResponse = await github.repos.createRelease({
+    const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
+
+    const createReleaseResponse = await octokit.repos.createRelease({
       owner,
       repo,
       tag_name: tagName,

@@ -9728,27 +9728,26 @@ var __webpack_exports__ = {};
 __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5438);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
 
-
+const github = __nccwpck_require__(5438);
 const fs = __nccwpck_require__(7147);
 
 async function run() {
   try {
-    const github = new _actions_github__WEBPACK_IMPORTED_MODULE_1__.GitHub(process.env.GITHUB_TOKEN);
-    const { owner, repo } = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo;
+    const { owner, repo } = github.context.repo;
     const tagName = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("tag_name", { required: true });
 
     const releaseName = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("release_name", { required: false });
     const commitish =
-      (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("commitish", { required: false }) || _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.sha;
+      (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("commitish", { required: false });
 
     const bodyPath = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)("body_path");
 
     let bodyFileContent = fs.readFileSync(bodyPath, { encoding: "utf8" });
 
-    const createReleaseResponse = await github.repos.createRelease({
+    const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
+
+    const createReleaseResponse = await octokit.repos.createRelease({
       owner,
       repo,
       tag_name: tagName,
