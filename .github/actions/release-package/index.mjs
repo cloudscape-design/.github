@@ -1,6 +1,6 @@
 import path from 'path';
 import { execSync } from 'child_process';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 
 const inputs = {
   path: process.env.INPUT_PATH,
@@ -37,8 +37,10 @@ function releasePackage(packagePath) {
 }  
 
 function addManifest(data, packagePath) {
+  const internalFolderName = 'internal'
+  mkdirSync(path.join(packagePath, internalFolderName), { recursive: true })
   writeFileSync(
-    path.join(packagePath, 'manifest.json'),
+    path.join(packagePath, internalFolderName, 'manifest.json'),
     JSON.stringify(data, null, 2)
   );
 }
