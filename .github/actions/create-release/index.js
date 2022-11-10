@@ -15,6 +15,8 @@ async function run() {
 
     let bodyFileContent = fs.readFileSync(bodyPath, { encoding: "utf8" });
 
+    console.log(process.env)
+
     const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
 
     const createReleaseResponse = await octokit.repos.createRelease({
