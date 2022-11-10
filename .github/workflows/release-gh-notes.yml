@@ -27,14 +27,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: e24dced5af8f972ec4289d22ac9d3ba72b0508d5
+          ref: 0c53a3915b62a1235e1905cb6bd0c538bce9293f
           fetch-depth: 0
       - name: Generate changelog
         run: npx conventional-changelog-cli@2 -i CHANGELOG.md -s -p conventionalcommits
       - name: Create Release
         uses: cloudscape-design/.github/.github/actions/create-release@dev-v3-alhalee
         with:
-          commitish: e24dced5af8f972ec4289d22ac9d3ba72b0508d5
+          commitish: 0c53a3915b62a1235e1905cb6bd0c538bce9293f
           tag_name: ${{ github.event.inputs.version }}
           release_name: Release ${{ github.event.inputs.version }}
           body_path: CHANGELOG.md
