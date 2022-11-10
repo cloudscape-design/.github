@@ -29,13 +29,7 @@ jobs:
         with:
           ref: 0c53a3915b62a1235e1905cb6bd0c538bce9293f
           fetch-depth: 0
-      #      - name: Generate changelog
-      #       run: npx conventional-changelog-cli@2 -i CHANGELOG.md -s -p conventionalcommits
+      - name: Generate changelog
+        run: npx conventional-changelog-cli@2 -i CHANGELOG.md -s -p conventionalcommits
       - name: Create Release
-        uses: cloudscape-design/.github/.github/actions/create-release@dev-v3-alhalee
-        with:
-          commitish: 0c53a3915b62a1235e1905cb6bd0c538bce9293f
-          version: ${{ github.event.inputs.version }}
-          release_name: Release ${{ github.event.inputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create ${{ github.event.inputs.version }} -F CHANGELOG.md --target 0c53a3915b62a1235e1905cb6bd0c538bce9293f
