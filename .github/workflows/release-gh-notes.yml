@@ -39,6 +39,8 @@ jobs:
         id: changelog
         run: echo ::set-output name=changelog_lines::$(wc -l < "CHANGELOG.md")
         shell: bash
+      - run: echo ${{ steps.changelog.outputs.changelog_lines }}
+      - run: echo $(wc -l < "CHANGELOG.md")   
       - name: Create Release
         run: gh release create ${{ github.event.inputs.version }} -F CHANGELOG.md --target d0a15a67989eb537245f7fdb08c54842a1c5461e --title "Release ${{ github.event.inputs.version }}"
         if: ${{ steps.changelog.outputs.changelog_lines }} >= 3
