@@ -1,7 +1,8 @@
-import { getInput, setOutput, setFailed } from '@actions/core';
-import { context, getOctokit } from '@actions/github';
 import { writeFileSync, readFileSync } from 'fs';
 import { spawnSync } from 'child_process';
+import { getInput, setOutput, setFailed } from '@actions/core';
+import { context, getOctokit } from '@actions/github';
+import conventionalChangelog from 'conventional-changelog';
 
 async function run() {
   try {
@@ -17,15 +18,9 @@ async function run() {
     packageJson.version = version;
     writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
 
-    const generateChangeLog = spawnSync(
-      'conventional-changelog -i CHANGELOG.md -s -p conventionalcommits'
-    );
-
-    if (generateChangeLog.status) {
-      throw new Error(
-        `Failed to generate changelog with non-zero exit code: ${installNpmPackage.status}`
-      );
-    }
+    conventionalChangelog({
+      preset: 'conventionalcommits',
+    }).pipe(process.stdout);
 
     const octokit = getOctokit(process.env.GITHUB_TOKEN);
 
