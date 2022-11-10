@@ -30,7 +30,7 @@ jobs:
           ref: e24dced5af8f972ec4289d22ac9d3ba72b0508d5
           fetch-depth: 0
       - name: Generate changelog
-        run: npx conventional-changelog-cli@3 -i CHANGELOG.md -s -p conventionalcommits
+        run: npx conventional-changelog-cli@2 -i CHANGELOG.md -s -p conventionalcommits
       - name: Create Release
         uses: cloudscape-design/.github/.github/actions/create-release@dev-v3-alhalee
         with:
