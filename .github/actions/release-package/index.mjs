@@ -48,7 +48,7 @@ function releasePackage(packagePath) {
 
 function addManifest(data, packagePath) {
   const internalFolderName = 'internal'
-  mkdirSync(`${packagePath}/${internalFolderName}`)
+  mkdirSync(path.join(packagePath, internalFolderName), { recursive: true })
   writeFileSync(
     path.join(packagePath, internalFolderName, 'manifest.json'),
     JSON.stringify(data, null, 2)
