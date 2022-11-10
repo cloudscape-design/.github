@@ -1,11 +1,11 @@
 import { getInput, setOutput, setFailed } from '@actions/core';
-import github from '@actions/github';
+import { context, getOctokit } from '@actions/github';
 import { writeFileSync, readFileSync } from 'fs';
 import { spawnSync } from 'child_process';
 
 async function run() {
   try {
-    const { owner, repo } = github.context.repo;
+    const { owner, repo } = context.repo;
     const version = getInput('version');
 
     const releaseName = getInput('release_name');
@@ -27,7 +27,7 @@ async function run() {
       );
     }
 
-    const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+    const octokit = getOctokit(process.env.GITHUB_TOKEN);
 
     const createReleaseResponse = await octokit.rest.repos.createRelease({
       owner,
