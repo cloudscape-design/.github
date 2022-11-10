@@ -19,7 +19,7 @@ async function run() {
 
     const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
 
-    const createReleaseResponse = await octokit.repos.createRelease({
+    const createReleaseResponse = await octokit.rest.repos.createRelease({
       owner,
       repo,
       tag_name: tagName,
