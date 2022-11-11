@@ -27,7 +27,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: d0a15a67989eb537245f7fdb08c54842a1c5461e
+          ref: 078023941f9ecaeb6745272aa1f8a82c6823ad84
           fetch-depth: 0
       - name: Replace version in package.json
         run: |
@@ -44,6 +44,6 @@ jobs:
         if: ${{ steps.changelog.outputs.changelog_lines <= 2 }}
         shell: bash
       - name: Create Release
-        run: gh release create ${{ github.event.inputs.version }} -F CHANGELOG.md --target d0a15a67989eb537245f7fdb08c54842a1c5461e --title "Release ${{ github.event.inputs.version }}"
+        run: gh release create ${{ github.event.inputs.version }} -F CHANGELOG.md --target 078023941f9ecaeb6745272aa1f8a82c6823ad84 --title "Release ${{ github.event.inputs.version }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
