@@ -11,6 +11,9 @@ const inputs = {
   commitSha: process.env.COMMIT_SHA,
 };
 
+const internalFolderName = 'internal'
+
+
 console.log("Inputs:");
 console.log(JSON.stringify(inputs, null, 2));
 
@@ -25,6 +28,10 @@ function releasePackage(packagePath) {
   // Update version in the package.json file
   const packageJson = JSON.parse(readFileSync(packageJsonPath));
   packageJson.version += inputs.suffix;
+
+  if(packageJson.files) {
+    packageJson.files.push(internalFolderName)
+  }
   writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
   // Publish to CodeArtifact
@@ -47,7 +54,6 @@ function releasePackage(packagePath) {
 }
 
 function addManifest(data, packagePath) {
-  const internalFolderName = 'internal'
   mkdirSync(path.join(packagePath, internalFolderName), { recursive: true })
   writeFileSync(
     path.join(packagePath, internalFolderName, 'manifest.json'),
