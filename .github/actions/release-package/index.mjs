@@ -1,6 +1,6 @@
 import path from 'path';
 import { execSync } from 'child_process';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 
 const inputs = {
   path: process.env.INPUT_PATH,
@@ -24,6 +24,12 @@ function releasePackage(packagePath) {
   // Update version in the package.json file
   const packageJson = JSON.parse(readFileSync(packageJsonPath));
   packageJson.version += inputs.suffix;
+
+  // Add internal folder to files in package.json
+  if(packageJson.files) {
+    packageJson.files.push(internalFolderName)
+  }
+  
   writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
   // Publish to CodeArtifact
@@ -37,8 +43,10 @@ function releasePackage(packagePath) {
 }  
 
 function addManifest(data, packagePath) {
+  const internalFolderName = 'internal'
+  mkdirSync(path.join(packagePath, internalFolderName), { recursive: true })
   writeFileSync(
-    path.join(packagePath, 'manifest.json'),
+    path.join(packagePath, internalFolderName, 'manifest.json'),
     JSON.stringify(data, null, 2)
   );
 }
