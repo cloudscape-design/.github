@@ -24,6 +24,12 @@ function releasePackage(packagePath) {
   // Update version in the package.json file
   const packageJson = JSON.parse(readFileSync(packageJsonPath));
   packageJson.version += inputs.suffix;
+
+  // Add internal folder to files in package.json
+  if(packageJson.files) {
+    packageJson.files.push(internalFolderName)
+  }
+  
   writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
   // Publish to CodeArtifact
