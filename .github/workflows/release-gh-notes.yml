@@ -40,7 +40,7 @@ jobs:
         run: echo ::set-output name=changelog_lines::$(wc -l < "CHANGELOG.md")
         shell: bash
       - name: Add empty release note
-        run: "No customer visible changes in this release" >> CHANGELOG.md
+        run: echo "No customer visible changes in this release" >> CHANGELOG.md
         if: ${{ steps.changelog.outputs.changelog_lines <= 2 }}
         shell: bash
       - name: Create Release
