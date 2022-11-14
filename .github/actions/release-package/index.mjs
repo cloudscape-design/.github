@@ -14,6 +14,8 @@ const inputs = {
 console.log('Inputs:');
 console.log(JSON.stringify(inputs, null, 2));
 
+const internalFolderName = 'internal'
+
 // The main branch should publish to next, and dev forks to next-dev
 const branchName = process.env.GITHUB_REF_TYPE === 'branch' ? process.env.GITHUB_REF_NAME : '';
 const publishTag = branchName.startsWith('dev-v3-') ? branchName : 'next';
@@ -43,7 +45,6 @@ function releasePackage(packagePath) {
 }  
 
 function addManifest(data, packagePath) {
-  const internalFolderName = 'internal'
   mkdirSync(path.join(packagePath, internalFolderName), { recursive: true })
   writeFileSync(
     path.join(packagePath, internalFolderName, 'manifest.json'),
