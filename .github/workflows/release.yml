@@ -49,7 +49,6 @@ jobs:
 
       - run: npm run build
 
-      - run: npm run test
       - name: Release package to private CodeArtifact
         uses: cloudscape-design/.github/.github/actions/release-package@main
         with:
