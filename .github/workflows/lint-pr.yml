@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          if [[ "${{ github.event.pull_request.title }}" =~ (^(chore|feat|fix|refactor|test){1}?: ([[:alnum:]])+([[:space:][:print:]]*)) ]]; then
+          if [[ "${{ github.event.pull_request.title }}" =~ (^(chore|feat|fix|refactor|test|revert){1}?: ([[:alnum:]])+([[:space:][:print:]]*)) ]]; then
            echo "Valid PR title"
           else 
            echo 'PR title does not follow the convention "type: subject"'
-           echo 'type must be one of the following: feat|fix|chore|refactor|test'
+           echo 'type must be one of the following: feat|fix|chore|refactor|test|revert'
            exit 1
           fi
         shell: bash
