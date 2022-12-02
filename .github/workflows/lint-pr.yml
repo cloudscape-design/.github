@@ -13,11 +13,21 @@ jobs:
       TITLE: ${{ github.event.pull_request.title }}
     steps:
       - run: |
-          if [[ "$TITLE" =~ (^(chore|feat|fix|refactor|test|revert){1}?: ([[:alnum:]])+([[:space:][:print:]]*)) ]]; then
-           echo "Valid PR title"
-          else 
-           echo 'PR title does not follow the convention "type: subject"'
-           echo 'type must be one of the following: feat|fix|chore|refactor|test|revert'
-           exit 1
-          fi
-        shell: bash
+          import os, re
+          valid_types = ['chore', 'feat', 'fix', 'refactor', 'test', 'revert']
+          try:
+              segments = re.split(r':\s*', os.getenv('TITLE', ''))
+              if (len(segments) != 2):
+                  raise Exception('Invalid number of commit types used')
+              type, subject = segments
+              if type.lower() not in valid_types:
+                  raise Exception('Invalid commit type')
+              if not all(c.isprintable() for c in subject):
+                  raise Exception('Invalid commit subject')
+              print('PR title is valid')
+              exit(0)
+          except Exception as e:
+              print('Error: {}'.format(e.args[0]))
+              print('PR title does not follow the convention "type: subject"\nValid types are: {}'.format(', '.join(valid_types)))
+              exit(1)
+        shell: python
