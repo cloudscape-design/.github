@@ -15,8 +15,8 @@ jobs:
       - run: |
           import os, re
           valid_types = ['chore', 'feat', 'fix', 'refactor', 'test', 'revert']
-          title = os.environ['TITLE']
           try:
+              title = os.environ['TITLE']
               segments = re.split(r':\s*', title, maxsplit=1)
               if (len(segments) != 2):
                   raise Exception('PR title does not follow "type: subject" convention')
