@@ -16,9 +16,9 @@ jobs:
           import os, re
           valid_types = ['chore', 'feat', 'fix', 'refactor', 'test', 'revert']
           try:
-              segments = re.split(r':\s*', os.getenv('TITLE', ''))
+              segments = re.split(r':\s*', title, maxsplit=1)
               if (len(segments) != 2):
-                  raise Exception('Invalid number of commit types used')
+                  raise Exception('PR title does not follow "type: subject" convention')
               type, subject = segments
               if type.lower() not in valid_types:
                   raise Exception('Invalid commit type')
