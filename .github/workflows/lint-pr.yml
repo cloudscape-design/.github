@@ -20,7 +20,7 @@ jobs:
               if (len(segments) != 2):
                   raise Exception('PR title does not follow "type: subject" convention')
               type, subject = segments
-              if type.lower() not in valid_types:
+              if type not in valid_types:
                   raise Exception('Invalid commit type')
               if not all(c.isprintable() for c in subject):
                   raise Exception('Invalid commit subject')
