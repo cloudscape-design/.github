@@ -48,7 +48,8 @@ jobs:
         run: git restore .
 
       - run: npm run build
-
+      - run: npm run start:integ
+      - run: npx jest -c jest.integ.config.js src/table/__integ__/sticky-header.test.ts
       - name: Release package to private CodeArtifact
         uses: cloudscape-design/.github/.github/actions/release-package@main
         with:
