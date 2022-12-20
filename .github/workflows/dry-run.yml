@@ -98,10 +98,10 @@ jobs:
     needs:
       - buildComponents
     steps:
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v2
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 16
       - name: Download component artifacts
         uses: actions/download-artifact@v2
         with:
@@ -117,10 +117,10 @@ jobs:
     needs:
       - buildComponents
     steps:
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v2
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 16
       - name: Download component artifacts
         uses: actions/download-artifact@v2
         with:
@@ -136,10 +136,10 @@ jobs:
     needs:
       - buildComponents
     steps:
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v2
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 16
       - name: Download component artifacts
         uses: actions/download-artifact@v2
         with:
@@ -148,7 +148,7 @@ jobs:
         run: tar -xzf components-full.tgz
       - name: Accessibility tests
         run: npm run test:a11y
-  
+
   demosTest:
     name: Demos tests
     runs-on: ubuntu-latest
