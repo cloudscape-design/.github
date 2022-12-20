@@ -23,14 +23,14 @@ runs:
   using: "composite"
   steps:
     - name: Clone
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: cloudscape-design/${{ inputs.package }}
         path: ${{ inputs.package }}
-    - name: Use Node.js 14.x
-      uses: actions/setup-node@v2
+    - name: Use Node.js 18
+      uses: actions/setup-node@v3
       with:
-        node-version: 14.x
+        node-version: 18
 
     - name: Download artifacts
       if: ${{ inputs.download_dependencies == 'true' }}
@@ -41,14 +41,14 @@ runs:
     - run: cd ${{ inputs.package }}
       shell: bash
 
-    - uses: cloudscape-design/.github/.github/actions/patch-local-dependencies@main
+    - uses: cloudscape-design/.github/.github/actions/patch-local-dependencies@chore/node16
       with:
         path: ${{ github.workspace }}/${{ inputs.package }}
         type: local
 
     - name: npm install
       shell: bash
-      run: npm i
+      run: npm i --force
       working-directory: ${{ inputs.package }}
     - name: Build
       if: ${{ inputs.skip_build != 'true' }}

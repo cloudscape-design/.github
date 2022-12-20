@@ -19,11 +19,11 @@ jobs:
     concurrency: release-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 18
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -37,12 +37,12 @@ jobs:
           aws codeartifact login --tool npm --repository $CODE_ARTIFACT_REPO --domain awsui --domain-owner ${{ secrets.AWS_ACCOUNT_ID }} --region us-west-2 --namespace @cloudscape-design
 
       - name: Make sure to use pre-release versions of our dependencies
-        uses: cloudscape-design/.github/.github/actions/patch-local-dependencies@main
+        uses: cloudscape-design/.github/.github/actions/patch-local-dependencies@chore/node16
         with:
           path: ${{ github.workspace }}
           type: next
 
-      - run: npm install
+      - run: npm install --force
 
       - name: Restore locally modified files
         run: git restore .
@@ -51,6 +51,6 @@ jobs:
 
       - run: npm run test
       - name: Release package to private CodeArtifact
-        uses: cloudscape-design/.github/.github/actions/release-package@main
+        uses: cloudscape-design/.github/.github/actions/release-package@chore/node16
         with:
           publish-packages: ${{ inputs.publish-packages }}
