@@ -9,6 +9,11 @@ on:
         description: "Comma-separated list of sub-folders to publish"
         type: string
         required: false
+      skip-test:
+        type: boolean
+        description: "Skip tests"
+        required: false
+        default: false
 
 permissions:
   id-token: write
@@ -50,6 +55,8 @@ jobs:
       - run: npm run build
 
       - run: npm run test
+        if: ${{ inputs.skip-test == false }}
+
       - name: Release package to private CodeArtifact
         uses: cloudscape-design/.github/.github/actions/release-package@main
         with:
