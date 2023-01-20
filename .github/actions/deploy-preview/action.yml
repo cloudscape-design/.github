@@ -1,0 +1,27 @@
+name: "Deploy an artifact to the preview distribution"
+
+inputs:
+  target_artifact:
+    description: "Name of the artifact that will be uploaded"
+    required: true
+  repository:
+    description: "The repository the package was built from"
+    required: true
+  pr_id:
+    description: "The Github PR ID"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Say "hello world"
+      shell: bash
+      run: echo "Hello world"
+
+# TODO:
+# Start deployment
+# Set up AWS Auth
+# Download and extract artifact
+# Check file size
+# Upload to S3
+# End deployment and post link (add commit hash to query string for "free" invalidation?)
