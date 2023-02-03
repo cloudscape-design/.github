@@ -8,6 +8,13 @@ on:
         description: "Skip CodeQL checks"
         required: false
         default: false
+      artifact-path:
+        type: string
+        description: "An optional file, directory or wildcard pattern that describes what to upload"
+      artifact-name:
+        type: string
+        description: "An optional artifact name"
+        default: "artifact"
 
 permissions:
   actions: read
@@ -30,6 +37,12 @@ jobs:
         if: ${{ github.repository != 'cloudscape-design/components' }}
       - run: npm run test:unit
         if: ${{ github.repository == 'cloudscape-design/components' }}
+      - name: Upload Artifacts
+        if: ${{ inputs.artifact-path != '' }}
+        uses: cloudscape-design/.github/.github/actions/upload-artifact@main
+        with:
+          path: ${{ inputs.artifact-path }}
+          name: ${{ inputs.artifact-name }}
       - name: Codecov
         uses: codecov/codecov-action@v3
 
