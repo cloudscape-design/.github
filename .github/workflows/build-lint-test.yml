@@ -23,6 +23,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Unlock dependencies
+        uses: cloudscape-design/.github/.github/actions/unlock-dependencies@main
       - run: npm i --force
       - run: npm run lint
       - run: npm run build
