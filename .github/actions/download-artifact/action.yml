@@ -1,0 +1,24 @@
+name: "Download artifact"
+description: "Downloads and extracts an artifact from GitHub artifacts"
+inputs:
+  path:
+    type: string
+    description: "A directory path for the extracted artifact"
+    required: true
+  name:
+    type: string
+    description: "Artifact name"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: ${{ inputs.name }}
+        path: ${{ inputs.path }}
+    - name: Deploy
+      run: |
+        cd ${{ inputs.path }}
+        tar -xf *.tar.gz
+      shell: bash

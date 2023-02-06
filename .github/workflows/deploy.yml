@@ -1,0 +1,42 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        type: string
+        description: "Name of artifact to deploy"
+        required: true
+      deployment-path:
+        type: string
+        description: "Directory of assets to upload"
+        default: "."
+
+permissions:
+  id-token: write
+  contents: read
+  deployments: write
+
+jobs:
+  deploy:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: preview
+      url: https://d21d5uik3ws71m.cloudfront.net/${{ github.event.repository.name }}/${{ github.event.pull_request.head.sha }}/index.html
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_PREVIEW_ROLE_ARN }}
+          aws-region: us-west-2
+      - name: Download artifact
+        uses: cloudscape-design/.github/.github/actions/download-artifact@main
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: build
+      - name: Deploy
+        id: deploy
+        run: |
+          aws s3 cp ${{ inputs.deployment-path }} s3://${{ secrets.AWS_PREVIEW_BUCKET_NAME }}/${{ github.event.repository.name }}/${{ github.event.pull_request.head.sha }} --recursive
+        working-directory: build
