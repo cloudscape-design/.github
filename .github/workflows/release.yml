@@ -29,6 +29,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+
+      - run: npm install --force
+
+      - run: npm run build
+
+      - run: npm run test
+        if: ${{ inputs.skip-test == false }}
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -40,22 +48,6 @@ jobs:
         run: |
           echo Logging into repository $CODE_ARTIFACT_REPO
           aws codeartifact login --tool npm --repository $CODE_ARTIFACT_REPO --domain awsui --domain-owner ${{ secrets.AWS_ACCOUNT_ID }} --region us-west-2 --namespace @cloudscape-design
-
-      - name: Make sure to use pre-release versions of our dependencies
-        uses: cloudscape-design/.github/.github/actions/patch-local-dependencies@main
-        with:
-          path: ${{ github.workspace }}
-          type: next
-
-      - run: npm install --force
-
-      - name: Restore locally modified files
-        run: git restore .
-
-      - run: npm run build
-
-      - run: npm run test
-        if: ${{ inputs.skip-test == false }}
 
       - name: Release package to private CodeArtifact
         uses: cloudscape-design/.github/.github/actions/release-package@main

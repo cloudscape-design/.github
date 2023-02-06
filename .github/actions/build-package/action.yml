@@ -44,7 +44,6 @@ runs:
     - uses: cloudscape-design/.github/.github/actions/patch-local-dependencies@main
       with:
         path: ${{ github.workspace }}/${{ inputs.package }}
-        type: local
 
     - name: npm install
       shell: bash
