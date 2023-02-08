@@ -81,7 +81,6 @@ jobs:
       - uses: cloudscape-design/.github/.github/actions/build-package@main
         with:
           package: component-toolkit
-          artifact_path: theming-*.tgz
           download_dependencies: true
   buildComponents:
     name: Build components
