@@ -21,6 +21,7 @@ jobs:
   deploy:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    continue-on-error: true
     environment:
       name: preview
       url: https://d21d5uik3ws71m.cloudfront.net/${{ github.event.repository.name }}/${{ github.event.pull_request.head.sha }}/index.html
