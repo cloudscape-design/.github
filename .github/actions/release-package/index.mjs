@@ -31,18 +31,14 @@ function releasePackage(packagePath) {
   if(packageJson.files) {
     packageJson.files.push(internalFolderName)
   }
-  
+
   writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
   // Publish to CodeArtifact
   console.info(`Publishing package ${packageJson.name} version ${packageJson.version} to dist-tag ${publishTag}`);
 
-  try {
-    execSync(`npm publish --tag ${publishTag}`, { stdio: 'inherit', cwd: packagePath });
-  } catch (e) {
-    console.error(`Publishing failed with ${e.status}: ${e.message}. ${e.stderr ? 'Full error: ' + e.stderr.toString() : ''}`);
-  }
-}  
+  execSync(`npm publish --tag ${publishTag}`, { stdio: 'inherit', cwd: packagePath });
+}
 
 function addManifest(data, packagePath) {
   mkdirSync(path.join(packagePath, internalFolderName), { recursive: true })
