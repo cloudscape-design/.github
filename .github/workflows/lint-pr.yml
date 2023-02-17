@@ -9,15 +9,18 @@ jobs:
   main:
     name: Validate PR title
     runs-on: ubuntu-latest
-    env:
-      TITLE: ${{ github.event.pull_request.title }}
     steps:
-      - run: |
-          if [[ "$TITLE" =~ (^(chore|feat|fix|refactor|test|revert){1}?: ([[:alnum:]])+([[:space:][:print:]]*)) ]]; then
-           echo "Valid PR title"
-          else 
-           echo 'PR title does not follow the convention "type: subject"'
-           echo 'type must be one of the following: feat|fix|chore|refactor|test|revert'
-           exit 1
-          fi
-        shell: bash
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const title = context.payload.pull_request.title;
+
+            const allowedTypes = ["chore", "feat", "fix", "refactor", "test", "revert"];
+
+            const matchesType = allowedTypes.some( type => title.startsWith(type + ":") );
+
+            if(!matchesType) {
+              console.log(`This PR's title does not follow the convention "type: subject". Allowed types are:`, allowedTypes.join(", "))
+              console.log(`This PR's title is:`, title)
+              process.exitCode = 1;
+            }
