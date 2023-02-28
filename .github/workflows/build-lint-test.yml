@@ -47,6 +47,8 @@ jobs:
           name: ${{ inputs.artifact-name }}
       - name: Codecov
         uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: true
 
   codeql:
     if: ${{ inputs.skip-codeql == false }}
