@@ -8,6 +8,11 @@ on:
         description: "Skip CodeQL checks"
         required: false
         default: false
+      skip-codecov:
+        type: boolean
+        description: "Skip code coverage step"
+        required: false
+        default: false
       artifact-path:
         type: string
         description: "An optional file, directory or wildcard pattern that describes what to upload"
@@ -46,6 +51,7 @@ jobs:
           path: ${{ inputs.artifact-path }}
           name: ${{ inputs.artifact-name }}
       - name: Codecov
+        if: ${{ inputs.skip-codecov == false }}
         uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true
