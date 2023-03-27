@@ -61,7 +61,7 @@ runs:
       run: npm test
       working-directory: ${{ inputs.package }}
     - name: Pack artifacts
-      if: ${{ inputs.package != 'components' && inputs.package != 'test-utils' && inputs.package != 'theming-core' && inputs.package != 'demos' }}
+      if: ${{ inputs.package != 'components' && inputs.package != 'test-utils' && inputs.package != 'theming-core' && inputs.package != 'board-components' && inputs.package != 'demos' }}
       shell: bash
       working-directory: ${{ inputs.package }}
       run: |
@@ -99,6 +99,15 @@ runs:
         cd $GITHUB_WORKSPACE
         mv *-theming-build-*.tgz theming-build.tgz
         mv *-theming-runtime-*.tgz theming-runtime.tgz
+
+    - name: Package board components files
+      if: ${{ inputs.package == 'board-components' }}
+      shell: bash
+      working-directory: ${{ inputs.package }}
+      run: |
+        cd lib/components
+        npm pack
+        cp *-${{ inputs.package }}-*.tgz $GITHUB_WORKSPACE/${{ inputs.package }}.tgz
 
     - name: Package component files
       if: ${{ inputs.package == 'components' }}
