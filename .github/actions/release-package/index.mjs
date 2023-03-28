@@ -1,20 +1,21 @@
 import path from 'path';
 import { execSync } from 'child_process';
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { copyFileSync, existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 
 const inputs = {
   path: process.env.INPUT_PATH,
   suffix: process.env.INPUT_SUFFIX,
+  isDryRun: process.env.AWSUI_DRY_RUN,
   publishPackages: process.env.PUBLISH_PACKAGES
     ? process.env.PUBLISH_PACKAGES.split(',').map((pkg) => pkg.trim())
     : null,
-    commitSha: process.env.COMMIT_SHA,
+  commitSha: process.env.COMMIT_SHA,
 };
 
 console.log('Inputs:');
 console.log(JSON.stringify(inputs, null, 2));
 
-const internalFolderName = 'internal'
+const internalFolderName = 'internal';
 
 // The main branch should publish to next, and dev forks to next-dev
 const branchName = process.env.GITHUB_REF_TYPE === 'branch' ? process.env.GITHUB_REF_NAME : '';
@@ -28,8 +29,8 @@ function releasePackage(packagePath) {
   packageJson.version += inputs.suffix;
 
   // Add internal folder to files in package.json
-  if(packageJson.files) {
-    packageJson.files.push(internalFolderName)
+  if (packageJson.files) {
+    packageJson.files.push(internalFolderName);
   }
 
   writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
@@ -37,15 +38,29 @@ function releasePackage(packagePath) {
   // Publish to CodeArtifact
   console.info(`Publishing package ${packageJson.name} version ${packageJson.version} to dist-tag ${publishTag}`);
 
+  if (inputs.isDryRun) {
+    packDryRunArtifact(packagePath);
+  } else {
+    publishPackage(packagePath);
+  }
+}
+
+function packDryRunArtifact(packagePath) {
+  const output = execSync('npm pack --quiet', { cwd: packagePath }).toString();
+  const artifactFile = output.split('\n')[0].trim();
+  const targetFile = output.replace(/^cloudscape-design-/, '').replace(/-\d+.\d+.\d+\./, '.');
+
+  console.log(`Copying ${artifactFile} to ${targetFile}`);
+  copyFileSync(path.join(packagePath, artifactFile), path.join(inputs.path, targetFile));
+}
+
+function publishPackage(packagePath) {
   execSync(`npm publish --tag ${publishTag}`, { stdio: 'inherit', cwd: packagePath });
 }
 
 function addManifest(data, packagePath) {
-  mkdirSync(path.join(packagePath, internalFolderName), { recursive: true })
-  writeFileSync(
-    path.join(packagePath, internalFolderName, 'manifest.json'),
-    JSON.stringify(data, null, 2)
-  );
+  mkdirSync(path.join(packagePath, internalFolderName), { recursive: true });
+  writeFileSync(path.join(packagePath, internalFolderName, 'manifest.json'), JSON.stringify(data, null, 2));
 }
 
 function main() {
