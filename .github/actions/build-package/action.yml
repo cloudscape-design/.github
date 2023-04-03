@@ -34,7 +34,7 @@ runs:
 
     - name: Download artifacts
       if: ${{ inputs.download_dependencies == 'true' }}
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: dependencies
 
@@ -118,7 +118,7 @@ runs:
         tar -czf ../design-tokens.tgz --directory=lib/design-tokens .
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.target_artifact }}
         path: ${{ inputs.artifact_path || format('{0}*.tgz', inputs.package) }}

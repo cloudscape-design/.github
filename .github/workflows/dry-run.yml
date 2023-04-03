@@ -115,7 +115,7 @@ jobs:
       - buildComponents
     steps:
       - name: Download component artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: components-package
       - uses: cloudscape-design/.github/.github/actions/build-package@main
@@ -134,7 +134,7 @@ jobs:
         with:
           node-version: 16
       - name: Download component artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: components-package
       - name: Unpack components artifacts
@@ -153,7 +153,7 @@ jobs:
         with:
           node-version: 16
       - name: Download component artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: components-package
       - name: Unpack components artifacts
@@ -172,7 +172,7 @@ jobs:
         with:
           node-version: 16
       - name: Download component artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: components-package
       - name: Unpack components artifacts
@@ -193,7 +193,7 @@ jobs:
       - buildThemingCore
     steps:
       - name: Download component artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: components-package
       - name: Build
