@@ -52,7 +52,7 @@ jobs:
           name: ${{ inputs.artifact-name }}
       - name: Codecov
         if: ${{ inputs.skip-codecov == false }}
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@894ff025c7b54547a9a2a1e9f228beae737ad3c2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
