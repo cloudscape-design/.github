@@ -38,7 +38,7 @@ jobs:
         if: ${{ inputs.skip-test == false }}
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_CODEARTIFACT_ROLE }}
           aws-region: us-west-2

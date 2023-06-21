@@ -27,7 +27,7 @@ jobs:
       url: https://d21d5uik3ws71m.cloudfront.net/${{ github.event.repository.name }}/${{ github.event.pull_request.head.sha }}/index.html
     steps:
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_PREVIEW_ROLE_ARN }}
           aws-region: us-west-2
