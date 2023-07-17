@@ -51,7 +51,7 @@ jobs:
           path: ${{ inputs.artifact-path }}
           name: ${{ inputs.artifact-name }}
       - name: Codecov
-        if: ${{ inputs.skip-codecov == false }}
+        if: ${{ inputs.skip-codecov == false && always() }}
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
