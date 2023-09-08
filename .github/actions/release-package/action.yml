@@ -9,10 +9,10 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Use Node.js 16
+    - name: Use Node.js 18
       uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: 18
 
     - name: Define new version suffix
       id: vars
