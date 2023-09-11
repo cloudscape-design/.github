@@ -22,11 +22,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Clone
-      uses: actions/checkout@v3
-      with:
-        repository: cloudscape-design/${{ inputs.package }}
-        path: ${{ inputs.package }}
     - name: Use Node.js 16
       uses: actions/setup-node@v3
       with:
