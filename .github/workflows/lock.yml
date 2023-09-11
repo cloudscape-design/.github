@@ -1,0 +1,21 @@
+name: Lock github threads
+
+on:
+  workflow_call:
+    inputs:
+      repository:
+        type: string
+        description: "Name of repository in organization"
+        required: true
+
+permissions:
+  discussions: write
+
+jobs:
+  discussion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: cloudscape-design/.github/.github/actions/lock_discussions@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repo: ${{inputs.repository}}

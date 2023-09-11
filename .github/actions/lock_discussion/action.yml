@@ -1,0 +1,12 @@
+name: "Lock discussions"
+description: "Locks answered discussions"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Use Node.js 18
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - run: TOKEN=${{inputs.token}} REPO=${{inputs.repo}} node ${{ github.action_path }}/index.js
+      shell: bash
