@@ -4,9 +4,9 @@ description: "Removes all @cloudscape-design dependencies from package-lock file
 runs:
   using: "composite"
   steps:
-    - name: Use Node.js 18
+    - name: Use Node.js 16
       uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version: 16
     - run: node ${{ github.action_path }}/index.js
       shell: bash

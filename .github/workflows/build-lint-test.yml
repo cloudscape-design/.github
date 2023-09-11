@@ -5,21 +5,21 @@ on:
     inputs:
       skip-codeql:
         type: boolean
-        description: "Skip CodeQL checks"
+        description: 'Skip CodeQL checks'
         required: false
         default: false
       skip-codecov:
         type: boolean
-        description: "Skip code coverage step"
+        description: 'Skip code coverage step'
         required: false
         default: false
       artifact-path:
         type: string
-        description: "An optional file, directory or wildcard pattern that describes what to upload"
+        description: 'An optional file, directory or wildcard pattern that describes what to upload'
       artifact-name:
         type: string
-        description: "An optional artifact name"
-        default: "artifact"
+        description: 'An optional artifact name'
+        default: 'artifact'
 
 permissions:
   actions: read
@@ -31,10 +31,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 18
+      - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 16
       - name: Unlock dependencies
         uses: cloudscape-design/.github/.github/actions/unlock-dependencies@main
       - run: npm i --force

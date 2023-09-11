@@ -129,10 +129,10 @@ jobs:
     needs:
       - buildComponents
     steps:
-      - name: Use Node.js 18
+      - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 16
       - name: Download component artifacts
         uses: actions/download-artifact@v3
         with:
@@ -148,10 +148,10 @@ jobs:
     needs:
       - buildComponents
     steps:
-      - name: Use Node.js 18
+      - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 16
       - name: Download component artifacts
         uses: actions/download-artifact@v3
         with:
@@ -170,10 +170,10 @@ jobs:
     needs:
       - buildComponents
     steps:
-      - name: Use Node.js 18
+      - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 16
       - name: Download component artifacts
         uses: actions/download-artifact@v3
         with:
