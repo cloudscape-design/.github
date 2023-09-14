@@ -164,6 +164,14 @@ jobs:
   a11yTest:
     name: Components accessibility tests
     runs-on: ubuntu-latest
+    needs:
+      - a11yTestShards
+    steps:
+      - run: echo "Completed all accessibility tests"
+
+  a11yTestShards:
+    name: Components accessibility tests shard
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         shard: [1, 2, 3, 4, 5, 6]
